@@ -17,7 +17,6 @@ import java.util.Arrays;
 import static org.hamcrest.Matchers.notNullValue;
 
 
-
 @RunWith(Parameterized.class)
 public class CreateOrderTests {
 
@@ -28,14 +27,6 @@ public class CreateOrderTests {
     private CreateOrder createOrder;
     private CancelOrder cancelOrder;
 
-    @Before
-    public void init() { // метод для логирования запроса и ответа при ошибке
-        RestAssured.config = RestAssured.config()
-                .logConfig(LogConfig.logConfig().enableLoggingOfRequestAndResponseIfValidationFails());
-
-        createOrder = new CreateOrder();
-        cancelOrder = new CancelOrder();
-    }
 
     @Parameterized.Parameters(name = "Тестовые данные: {index}")
     public static Iterable<Object[]> getParameters() {
@@ -51,12 +42,20 @@ public class CreateOrderTests {
         this.colors = colors;
     }
 
+    @Before
+    public void init() { // метод для логирования запроса и ответа при ошибке
+        RestAssured.config = RestAssured.config()
+                .logConfig(LogConfig.logConfig().enableLoggingOfRequestAndResponseIfValidationFails());
+
+        createOrder = new CreateOrder();
+        cancelOrder = new CancelOrder();
+    }
+
     @Step("Send POST request to /api/v1/orders")
     public ValidatableResponse createOrder(String[] colors) {
            ValidatableResponse response =  createOrder.createOrder(colors);
            return response;
     }
-
 
     @Step("Compare response status code with extends status code")
     public  void compareStatusCode(ValidatableResponse response, int statusCode) {
@@ -72,7 +71,6 @@ public class CreateOrderTests {
     public  void compareTrackIsNotValue(ValidatableResponse response, String path) {
         response.body(path, notNullValue());
     }
-
 
     @Test
     @DisplayName("Check response status code create order")

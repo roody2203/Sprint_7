@@ -23,7 +23,6 @@ public class CreateCourier {
                 .then();
     }
 
-
     public ValidatableResponse createCourierWithoutFirstName(String login, String password) {
         CreateCourierRequest createCourierRequest = new CreateCourierRequest();
         createCourierRequest.setLogin(login);
@@ -37,5 +36,4 @@ public class CreateCourier {
                 .post("/api/v1/courier")
                 .then();
     }
-
 }

@@ -173,7 +173,6 @@ public class LoginCourierTests {
         compareStatusCode(response, 404);//проверяем статус код ответа
     }
 
-
     @Test
     @DisplayName("Check response body login courier with fake login")
     public void checkLoginCourierWithFakeLoginShouldReturnMessageTest() {//проверка тела ответа при неверной передаче логина в запросе
@@ -200,7 +199,6 @@ public class LoginCourierTests {
         response = loginCourierInSystem(login, "password");
         compareStatusCode(response, 404);//проверяем статус код ответа
     }
-
 
     @Test
     @DisplayName("Check response body login courier with fake password")

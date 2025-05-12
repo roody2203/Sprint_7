@@ -28,5 +28,4 @@ public class CreateOrder {
                 .post("/api/v1/orders")
                 .then();
     }
-
 }

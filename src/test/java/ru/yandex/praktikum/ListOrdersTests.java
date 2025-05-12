@@ -31,5 +31,4 @@ public class ListOrdersTests {
         ValidatableResponse response = listOrders.getListOrders();
         checkBodyListOrdersIsNotNull(response, "orders");
     }
-
 }

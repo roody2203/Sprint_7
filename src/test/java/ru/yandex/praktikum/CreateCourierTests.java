@@ -70,7 +70,6 @@ public class CreateCourierTests {
         response.body(result, is(extendsBody));
     }
 
-
     @Before
     public void init() { // метод для логирования запроса и ответа при ошибке
         RestAssured.config = RestAssured.config()
@@ -221,6 +220,4 @@ public class CreateCourierTests {
             deleteCourier.deleteCourier(id);
         }
     }
-
-
 }

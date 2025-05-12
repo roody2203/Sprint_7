@@ -2,7 +2,7 @@ package ru.yandex.praktikum.dto;
 
 import lombok.Data;
 
-@Data //аннотация для создания геттеров, сеттеров, создания конструкторов
+@Data // Аннотация для создания геттеров, сеттеров, создания конструкторов
 public class CreateCourierRequest {
     private String login;
 
