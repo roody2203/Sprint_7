@@ -1,18 +1,21 @@
 package ru.yandex.praktikum.steps;
 
+import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 
 import static io.restassured.RestAssured.given;
 
-public class DeleteCourier {
+public class DeleteCourier extends BaseApi {
+    public final static String path = "/api/v1/courier/{id}";
+
+    @Step("Send DELETE request to /api/v1/courier/{id}")
     public ValidatableResponse deleteCourier(int id) {
         return given()
-                .contentType(ContentType.JSON)
-                .baseUri("https://qa-scooter.praktikum-services.ru/")
+                .spec(requestSpecification)
                 .pathParam("id", id)
                 .when()
-                .delete("/api/v1/courier/{id}")
+                .delete(path)
                 .then();
     }
 }

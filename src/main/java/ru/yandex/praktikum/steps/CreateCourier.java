@@ -1,39 +1,23 @@
 package ru.yandex.praktikum.steps;
 
+import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import ru.yandex.praktikum.dto.CreateCourierRequest;
 
 import static io.restassured.RestAssured.given;
 
-public class CreateCourier {
+public class CreateCourier extends BaseApi {
+    public final static String path = "/api/v1/courier";
 
-    public ValidatableResponse createCourier(String login, String password, String firstName) {
-        CreateCourierRequest createCourierRequest = new CreateCourierRequest();
-        createCourierRequest.setLogin(login);
-        createCourierRequest.setPassword(password);
-        createCourierRequest.setFirstName(firstName);
+    @Step("Send POST request to /api/v1/courier")
+    public ValidatableResponse createCourier(CreateCourierRequest request) {
 
         return given()
-                .contentType(ContentType.JSON)
-                .baseUri("https://qa-scooter.praktikum-services.ru/")
-                .body(createCourierRequest)
+                .spec(requestSpecification)
+                .body(request)
                 .when()
-                .post("/api/v1/courier")
-                .then();
-    }
-
-    public ValidatableResponse createCourierWithoutFirstName(String login, String password) {
-        CreateCourierRequest createCourierRequest = new CreateCourierRequest();
-        createCourierRequest.setLogin(login);
-        createCourierRequest.setPassword(password);
-
-        return given()
-                .contentType(ContentType.JSON)
-                .baseUri("https://qa-scooter.praktikum-services.ru/")
-                .body(createCourierRequest)
-                .when()
-                .post("/api/v1/courier")
+                .post(path)
                 .then();
     }
 }

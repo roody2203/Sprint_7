@@ -5,11 +5,14 @@ import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.config.LogConfig;
 import io.restassured.response.ValidatableResponse;
+import org.apache.http.HttpStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import ru.yandex.praktikum.dto.CancelOrderRequest;
+import ru.yandex.praktikum.dto.CreateOrderRequest;
 import ru.yandex.praktikum.steps.*;
 
 import java.util.Arrays;
@@ -51,50 +54,49 @@ public class CreateOrderTests {
         cancelOrder = new CancelOrder();
     }
 
-    @Step("Send POST request to /api/v1/orders")
-    public ValidatableResponse createOrder(String[] colors) {
-           ValidatableResponse response =  createOrder.createOrder(colors);
-           return response;
-    }
-
-    @Step("Compare response status code with extends status code")
+    @Step("Compare response status code with expected")
     public  void compareStatusCode(ValidatableResponse response, int statusCode) {
         response.statusCode(statusCode);
     }
 
     @Step("Get track")
-        public void getTrack(ValidatableResponse response, String path) {
-            track = response.extract().path(path);
+    public Integer getTrack(ValidatableResponse response, String path) {
+        return response.extract().path(path);
     }
 
-    @Step("Compare response status code with extends status code")
-    public  void compareTrackIsNotValue(ValidatableResponse response, String path) {
+    @Step("Compare response track is not null")
+    public void compareTrackIsNotValue(ValidatableResponse response, String path) {
         response.body(path, notNullValue());
     }
 
     @Test
-    @DisplayName("Check response status code create order")
-    public void checkCreateOrderShouldReturnStatusCode201Test() {//проверка статус кода ответа при создании заказа в системе
+    @DisplayName("Check create order")
+    public void checkCreateOrderTest() {//проверка при создании заказа в системе
         //создаем заказ
-        ValidatableResponse response = createOrder.createOrder(colors);
-        compareStatusCode(response, 201);
-        getTrack(response, "track");
-    }
+        CreateOrderRequest request = new CreateOrderRequest();
+        request.setFirstName("Naruto");
+        request.setLastName("Uchiha");
+        request.setAddress("Konoha, 142 apt.");
+        request.setMetroStation("4");
+        request.setPhone("+7 800 355 35 35");
+        request.setRentTime("5");
+        request.setDeliveryDate("2027-06-06");
+        request.setComment("Saske, come back to Konoha");
+        request.setColor(colors);
+        ValidatableResponse response =  createOrder.createOrder(request);
 
-    @Test
-    @DisplayName("Check response body contains 'track' create order")
-    public void checkCreateOrderShouldReturnTrackTest() {//проверка тела ответа при создании заказа в системе
-        //создаем заказ
-        ValidatableResponse response = createOrder.createOrder(colors);
+        compareStatusCode(response, HttpStatus.SC_CREATED);
         compareTrackIsNotValue(response, "track");
-        getTrack(response, "track");
+        track = getTrack(response, "track");
     }
 
     @After
     public void teardown() {
         if(track != null) {
             //удаляем созданного курьера
-            cancelOrder.cancelOrder(track);
+            CancelOrderRequest request = new CancelOrderRequest();
+            request.setTrack(track);
+            cancelOrder.cancelOrder(request);
         }
     }
 }

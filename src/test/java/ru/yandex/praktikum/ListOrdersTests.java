@@ -5,6 +5,7 @@ import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.config.LogConfig;
 import io.restassured.response.ValidatableResponse;
+import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import ru.yandex.praktikum.steps.ListOrders;
@@ -20,15 +21,21 @@ public class ListOrdersTests {
                 .logConfig(LogConfig.logConfig().enableLoggingOfRequestAndResponseIfValidationFails());
     }
 
-    @Step("Check list orders is not null value")
-    public void checkBodyListOrdersIsNotNull(ValidatableResponse response, String path) {
+    @Step("Compare response status code with expected")
+    public  void compareStatusCode(ValidatableResponse response, int statusCode) {
+        response.statusCode(statusCode);
+    }
+
+    @Step("Check list orders is not null")
+    public void checkBodyIsNotNull(ValidatableResponse response, String path) {
         response.body(path, notNullValue());
     }
 
     @Test
-    @DisplayName("Check response body contains list orders create order")
-    public void checkStatusCodeListOrdersShouldReturn200Test() {
+    @DisplayName("Check list orders")
+    public void listOrdersTest() {
         ValidatableResponse response = listOrders.getListOrders();
-        checkBodyListOrdersIsNotNull(response, "orders");
+        compareStatusCode(response, HttpStatus.SC_OK);
+        checkBodyIsNotNull(response, "orders");
     }
 }
